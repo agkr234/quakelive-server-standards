@@ -61,7 +61,7 @@
 
 ## Q&A - その他
 - コンフィグを弄りたい  
- → quakelive-server-standards\_mknrserver にある autoexec.cfg を開いて弄る
+ → quakelive-server-standards\\_mknrserver にある autoexec.cfg を開いて弄る
 
 ## docker使う利点
 - コンテナが落ちたら勝手に再起動してくれる。
