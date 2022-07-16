@@ -2,8 +2,8 @@
 
 ## QLサーバーの立て方 (Windows 10 - Docker Desktop)
 1. ファイルのダウンロードをする。
-    - 下記のリポジトリページを開いて、緑色の"Code"からダウンロードする  
-        [https://github.com/agkr234/quakelive-server-standards](https://github.com/agkr234/quakelive-server-standards)
+    - 下記のURLからダウンロードする  
+        [https://github.com/agkr234/quakelive-server-standards/archive/refs/heads/mknr-lan.zip](https://github.com/agkr234/quakelive-server-standards/archive/refs/heads/mknr-lan.zip)
 
         - gitのCLIを使ったことがあるならgit cloneでダウンロードしてもok
 
