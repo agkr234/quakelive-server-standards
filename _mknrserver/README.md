@@ -26,20 +26,17 @@
         
 
 ## サーバー操作方法
-前提：コマンドプロンプトで操作する。
-- QLサーバーのコンソール関連
-  - QLサーバーのコンソールに入りたい。  
-    以下のコマンドを入力をすると、QLサーバーのコンソールを操作できるようになる。
-    ```
-    docker attach mknrserver_ctf1_1
-    ```
-  - QLサーバーのコンソールから抜け出したい。  
-    ```
-    Ctrl+P+Q を同時押し
-    ```
+前提：コマンドプロンプトで操作する
 - コンテナ関連
-  - コンテナ内(mknrserver_ctf1_1)をbashで操作したい。  
-    以下のコマンドを入力をすると、コンテナ内をbashで操作できる。  
+  - コンテナを停止したい
+    ```
+    Ctrl+C を同時押し (docker-compose up --build をしたコマンドプロンプトで)
+    ```
+    - またはquakelive-server-standards\\_mknrserverに移動して、
+    ```
+    docker-compose down
+    ```
+  - コンテナ内(mknrserver_ctf1_1)をbashで操作したい  
     ```
     docker exec -it mknrserver_ctf1_1 bash
     ```
@@ -47,7 +44,21 @@
     ```
     exit (コンテナ内のbashで)
     ```
-    または `Ctrl+P+Q`を同時押し
+    - または  
+    ```
+    Ctrl+P+Q を同時押し
+    ```
+    
+- QLサーバーのコンソール関連
+  - QLサーバーのコンソールに入りたい  
+    ```
+    docker attach mknrserver_ctf1_1
+    ```
+  - QLサーバーのコンソールから抜け出したい  
+    ```
+    Ctrl+P+Q を同時押し
+    ```
+
     
 ## docker使う利点
 - コンテナが落ちたら勝手に再起動してくれる。
