@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  ctf1:
+    image: quakeliveserverstandards/ctf
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    restart: always
+    ports:
+      - '27965:27960/udp' # game port を弄りたかったら、ここの左側の番号を変える。　例：27965でゲームサーバーを立てたい → 27965:27960/udp
+      - '27960:27960/tcp' # stats port
+      - '28960:28960' # rcon port
+    environment:
+      - NET_PORT=27960
+      - ZMQ_RCON_PORT=
+      - ZMQ_STATS_PORT=
+      - SV_HOSTNAME='Standard CTF Server #1'
+      - SV_TAGS=ctf std
+      - COM_HUNKMEGS=
+      - G_PASSWORD=
+      - SV_HOSTNAME=
+      - SV_MAXCLIENTS=
+      - SV_PRIVATECLIENTS=
+      - SV_PRIVATEPASSWORD=
+      # - QLX_PLUGINS= # autoexec.cfgにあるqlx_pluginsを直接いじったほうがいいかも。デフォルトでいいなら何もしないでOK
+    volumes:
+      - './access.txt:/home/steam/ql/baseq3/access.txt'
+      - './autoexec.cfg:/home/steam/ql/baseq3/autoexec.cfg'
+      - '../configs/standard/server.cfg:/home/steam/ql/baseq3/server.cfg'
+      - '../factories/standard/ctf/ctf.factories:/home/steam/ql/baseq3/scripts/ctf.factories'
+      - '../mappools/standard/ctf/mappool.txt:/home/steam/ql/baseq3/mappool.txt'
+      - '../minqlx-plugins/standard/ctf:/home/steam/ql/minqlx-plugins'
+      - '../workshop/standard/ctf/workshop.txt:/home/steam/ql/baseq3/workshop.txt'
+    depends_on: 
+      - redis
+# Redis database needed by minqlx
+  redis:
+    image: redis
+    restart: always
+    volumes:
+      - redis:/data # uses a Docker volumne by default
+
+# Docker volumne containing the data of the Redis database
+# You can safely delete the redis service without losing data
+volumes:
+  redis:

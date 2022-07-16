@@ -1,0 +1,63 @@
+# makinero lan用 QLサーバー
+
+## QLサーバーの立て方 (Windows 10 - Docker Desktop)
+1. ファイルのダウンロードをする。
+    - 下記のリポジトリページを開いて、緑色の"Code"からダウンロードする  
+        [https://github.com/agkr234/quakelive-server-standards](https://github.com/agkr234/quakelive-server-standards)
+
+        - gitのCLIを使ったことがあるならgit cloneでダウンロードしてもok
+
+2. QLサーバーに使うポート番号を変える。
+    - quakelive-server-standards\\_mknrserver にある docker-compose.yml をテキストエディタで開く。
+    - ports: の欄にある "27960:27960/udp # game port・・・" のところを編集。
+        - 左側の数字のみを変える。　例：27965でゲームサーバーを立てたい → 27965:27960/udp
+        - **QLクライアントと同じポート番号を使うとサーバーに繋げなくなるので注意**
+          - **QLクライアント**の起動オプションに +set net_port 27999 などQLサーバーに使わないポート番号を設定しておくことをおススメします。
+
+3. コンテナを起動する
+    - コマンドプロンプトを開いて quakelive-server-standards\\_mknrserver に移動する  
+    ```cd /d ダウンロードしたディレクトリ\quakelive-server-standards\_mknrserver```  
+      - 例: ```cd /d C:\Users\makinero\quakelive-server-standards\_mknrserver```
+    - docker-compose でコンテナを起動する  
+      以下のコマンドを入力すると自動で docker imageの取得＋コンテナの立ち上げ を行ってくれます。
+        ```
+        docker-compose up --build
+        ```
+        
+
+## サーバー操作方法
+前提：コマンドプロンプトで操作する。
+- QLサーバーのコンソール関連
+  - QLサーバーのコンソールに入りたい。  
+    以下のコマンドを入力をすると、QLサーバーのコンソールを操作できるようになる。
+    ```
+    docker attach mknrserver_ctf1_1
+    ```
+  - QLサーバーのコンソールから抜け出したい。  
+    ```
+    Ctrl+P+Q を同時押し
+    ```
+- コンテナ関連
+  - コンテナ内(mknrserver_ctf1_1)をbashで操作したい。  
+    以下のコマンドを入力をすると、コンテナ内をbashで操作できる。  
+    ```
+    docker exec -it mknrserver_ctf1_1 bash
+    ```
+  - コンテナ内から抜け出したい
+    ```
+    exit (コンテナ内のbashで)
+    ```
+    または `Ctrl+P+Q`を同時押し
+    
+## docker使う利点
+- コンテナが落ちたら勝手に再起動してくれる。
+- dockerを導入できればあとは自動でQLサーバーを構築してくれる。
+  - さらに他のゲームサーバーのdocker用ファイルがまとまってれば、同じようにdocker-compose up --buildだけで起動できる。
+- 他の人も同じようなQLサーバーを簡単に構築できる。
+
+## Todo
+- workshopファイルをコンテナ起動時に自動ダウンロード
+  - QLサーバーに搭載されてるダウンロード機能は壊れてるので自動でダウンロードしてくれない。
+- 多目的モード用のQLサーバー
+  - 現状の問題点: 一つのコンテナ(QLサーバー)につき1モードを想定して設計されているので、他のmodeがvoteできない。
+  - おそらく身内用だといろんなmodeをvoteできるほうがいいと思うのでちょっと弄ってみます。
