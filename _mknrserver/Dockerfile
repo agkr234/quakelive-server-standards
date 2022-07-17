@@ -1,43 +1,14 @@
-# the image is based on the officially recommended steamcmd image which runs on debian
-# the 'root' flavor is used to be able to install further dependencies
-FROM cm2network/steamcmd:root
+# the image is based on the quake live server standards base image
+FROM quakeliveserverstandards/ql-server
 
-# setting the working directory as created by the cm2network/steamcmd base image
-WORKDIR /home/steam
+COPY --chown=steam:steam minqlx-plugins/ /home/steam/ql/minqlx-plugins
 
-# install further dependencies for minqlx
-# https://github.com/MinoMino/minqlx#installation
-RUN set -x \
-    && apt-get update \
-    && apt-get -y install python3 python3-dev wget git build-essential \
-    && wget https://bootstrap.pypa.io/get-pip.py \
-    && python3 get-pip.py \
-    && rm get-pip.py
+COPY --chown=steam:steam download-workshop.sh /home/steam/ql/download-workshop.sh
 
-# change the user
-USER steam
-
-# install the Quake Live dedicated server, minqlx and the minqlx plugin requirements
-# https://github.com/MinoMino/minqlx-plugins#minqlx-plugins
-RUN set -x \
-    && ./steamcmd/steamcmd.sh +login anonymous +app_update 349090 +quit \
-    && ln -s "Steam/steamapps/common/Quake Live Dedicated Server/" ql \
-    && git clone https://github.com/MinoMino/minqlx.git \
-    && cd minqlx \
-    && make \
-    && cd ~ \
-    && cp minqlx/bin/* ql \
-    && cd ql \
-    && git clone https://github.com/MinoMino/minqlx-plugins.git \
-    && python3 -m pip install -r minqlx-plugins/requirements.txt
-
-# copy the standard server.cfg into the image
-COPY --chown=steam:steam configs/standard/server.cfg /home/steam/ql/baseq3
-
-# execute the server and allow certain cvars to be set by environment variables
+# 元のイメージ(quakeliveserverstandards/ql-server)のスタートアップコマンドを上書き。自動でminqlx-plugins内にあるプラグインを読み込む + workshopをダウンロードするために。
 CMD \
     # determine installed plugins - contributed by em92 (https://github.com/MinoMino/minqlx/issues/105)
-    INSTALLED_QLX_PLUGINS=`find ./ql/minqlx-plugins/*.py | grep -v "__init__" | sed 's!.*/!!' | sed 's!\.py!!' | xargs | tr ' ' ', '` \
+    INSTALLED_QLX_PLUGINS=`find ${HOMEDIR}/ql/minqlx-plugins/*.py | grep -v "__init__" | sed 's!.*/!!' | sed 's!\.py!!' | xargs | tr ' ' ', '` \
     && set -x \
     # if NET_PORT is not set then set it to the default port of 27960
     && export NET_PORT=${NET_PORT:-27960} \
@@ -50,6 +21,8 @@ CMD \
     && export SERVERSTARTUP=${SERVERSTARTUP:-startRandomMap} \
     # if QLX_PLUGINS is not set then set it to the list of present plugins in the minqlx-plugins directory
     && export QLX_PLUGINS=${QLX_PLUGINS:-$INSTALLED_QLX_PLUGINS} \
+    # workshop.txtにある項目を全てダウンロード
+    && ${HOMEDIR}/ql/download-workshop.sh \
     # start the minqlx extended quake live server
     && ./ql/run_server_x64_minqlx.sh \
     # only attach a cvar parameter if the environment variable is set

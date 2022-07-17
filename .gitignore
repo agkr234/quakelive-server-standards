@@ -9,3 +9,5 @@ workshop/_items/7*
 workshop/_items/8*
 workshop/_items/9*
 .DS_Store
+_mknrserver/steamapps/**
+!_mknrserver/steamapps/.gitkeep
