@@ -6,7 +6,7 @@ services:
     tty: true        # docker run -t
     restart: always
     ports:
-      - '27965:27960/udp' # game port を弄りたかったら、ここの左側の番号を変える。　例：27965でゲームサーバーを立てたい → 27965:27960/udp
+      - '27960:27960/udp' # game port を弄りたかったら、ここの左側の番号を変える。　例：27965でゲームサーバーを立てたい → 27965:27960/udp
       - '27960:27960/tcp' # stats port
       - '28960:28960' # rcon port
     environment:
